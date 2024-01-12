@@ -203,12 +203,14 @@ type Event {
   endDate: Date!
   endTime: Time
   feedback: [Feedback!]!
+  images: [String]
   isPublic: Boolean!
   isRegisterable: Boolean!
   latitude: Latitude
   location: String
   longitude: Longitude
   organization: Organization
+  projects: [EventProject]
   recurrance: Recurrance
   recurring: Boolean!
   startDate: Date!
@@ -227,6 +229,7 @@ input EventInput {
   description: String!
   endDate: Date
   endTime: Time
+  images: [String]
   isPublic: Boolean!
   isRegisterable: Boolean!
   latitude: Latitude
@@ -261,6 +264,14 @@ enum EventOrderByInput {
   startTime_DESC
   title_ASC
   title_DESC
+}
+
+type EventProject {
+  _id: ID!
+  description: String!
+  event: Event!
+  tasks: [Task]
+  title: String!
 }
 
 input EventWhereInput {
@@ -550,12 +561,12 @@ type Organization {
   customFields: [OrganizationCustomField!]!
   description: String!
   image: String
+  isPublic: Boolean!
   location: String
   members: [User]
   membershipRequests: [MembershipRequest]
   name: String!
   pinnedPosts: [Post]
-  userRegistrationRequired: Boolean!
   userTags(after: String, before: String, first: PositiveInt, last: PositiveInt): UserTagsConnection
   visibleInSearch: Boolean!
 }
@@ -573,8 +584,8 @@ type OrganizationInfoNode {
   creator: User!
   description: String!
   image: String
+  isPublic: Boolean!
   name: String!
-  userRegistrationRequired: Boolean!
   visibleInSearch: Boolean!
 }
 
@@ -831,6 +842,18 @@ type Subscription {
   onPluginUpdate: Plugin
 }
 
+type Task {
+  _id: ID!
+  completed: Boolean
+  createdAt: DateTime!
+  creator: User!
+  deadline: DateTime
+  description: String
+  event: Event!
+  title: String!
+  volunteers: [User]
+}
+
 scalar Time
 
 input ToggleUserTagAssignInput {
@@ -865,6 +888,7 @@ input UpdateEventInput {
   description: String
   endDate: Date
   endTime: Time
+  images: [String]
   isPublic: Boolean
   isRegisterable: Boolean
   latitude: Latitude
@@ -922,6 +946,7 @@ type User {
   adminApproved: Boolean
   adminFor: [Organization]
   appLanguageCode: String!
+  assignedTasks: [Task]
   birthDate: Date
   createdAt: DateTime
   createdEvents: [Event]

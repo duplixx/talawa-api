@@ -49,6 +49,7 @@
     "@graphql-tools/schema": "^10.0.0",
     "@graphql-tools/utils": "^10.0.11",
     "@types/graphql-upload": "^16.0.5",
+    "@types/ws": "^8.5.10",
     "@types/yargs": "^17.0.32",
     "axios": "^1.6.0",
     "bcryptjs": "^2.4.3",
@@ -89,7 +90,7 @@
     "validator": "^13.7.0",
     "vite": "^3.2.7",
     "winston": "^3.8.0",
-    "ws": "^8.15.0",
+    "ws": "^8.16.0",
     "yargs": "^17.7.2",
     "zod": "^3.22.3",
     "zod-error": "^1.5.0"

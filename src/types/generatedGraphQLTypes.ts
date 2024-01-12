@@ -254,12 +254,14 @@ export type Event = {
   endDate: Scalars['Date']['output'];
   endTime?: Maybe<Scalars['Time']['output']>;
   feedback: Array<Feedback>;
+  images?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
   isPublic: Scalars['Boolean']['output'];
   isRegisterable: Scalars['Boolean']['output'];
   latitude?: Maybe<Scalars['Latitude']['output']>;
   location?: Maybe<Scalars['String']['output']>;
   longitude?: Maybe<Scalars['Longitude']['output']>;
   organization?: Maybe<Organization>;
+  projects?: Maybe<Array<Maybe<EventProject>>>;
   recurrance?: Maybe<Recurrance>;
   recurring: Scalars['Boolean']['output'];
   startDate: Scalars['Date']['output'];
@@ -283,6 +285,7 @@ export type EventInput = {
   description: Scalars['String']['input'];
   endDate?: InputMaybe<Scalars['Date']['input']>;
   endTime?: InputMaybe<Scalars['Time']['input']>;
+  images?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   isPublic: Scalars['Boolean']['input'];
   isRegisterable: Scalars['Boolean']['input'];
   latitude?: InputMaybe<Scalars['Latitude']['input']>;
@@ -317,6 +320,15 @@ export type EventOrderByInput =
   | 'startTime_DESC'
   | 'title_ASC'
   | 'title_DESC';
+
+export type EventProject = {
+  __typename?: 'EventProject';
+  _id: Scalars['ID']['output'];
+  description: Scalars['String']['output'];
+  event: Event;
+  tasks?: Maybe<Array<Maybe<Task>>>;
+  title: Scalars['String']['output'];
+};
 
 export type EventWhereInput = {
   description?: InputMaybe<Scalars['String']['input']>;
@@ -1051,14 +1063,14 @@ export type Organization = {
   createdAt?: Maybe<Scalars['DateTime']['output']>;
   creator: User;
   customFields: Array<OrganizationCustomField>;
-  description: Scalars['String'];
-  image?: Maybe<Scalars['String']>;
-  location?: Maybe<Scalars['String']>;
+  description: Scalars['String']['output'];
+  image?: Maybe<Scalars['String']['output']>;
+  isPublic: Scalars['Boolean']['output'];
+  location?: Maybe<Scalars['String']['output']>;
   members?: Maybe<Array<Maybe<User>>>;
   membershipRequests?: Maybe<Array<Maybe<MembershipRequest>>>;
   name: Scalars['String']['output'];
   pinnedPosts?: Maybe<Array<Maybe<Post>>>;
-  userRegistrationRequired: Scalars['Boolean'];
   userTags?: Maybe<UserTagsConnection>;
   visibleInSearch: Scalars['Boolean']['output'];
 };
@@ -1089,23 +1101,22 @@ export type OrganizationInfoNode = {
   _id: Scalars['ID']['output'];
   apiUrl: Scalars['URL']['output'];
   creator: User;
-
-  description: Scalars['String'];
-  image?: Maybe<Scalars['String']>;
-  name: Scalars['String'];
-  userRegistrationRequired: Scalars['Boolean'];
-  visibleInSearch: Scalars['Boolean'];
+  description: Scalars['String']['output'];
+  image?: Maybe<Scalars['String']['output']>;
+  isPublic: Scalars['Boolean']['output'];
+  name: Scalars['String']['output'];
+  visibleInSearch: Scalars['Boolean']['output'];
 };
 
 export type OrganizationInput = {
-  apiUrl?: InputMaybe<Scalars['URL']>;
-  attendees?: InputMaybe<Scalars['String']>;
-  description: Scalars['String'];
-  image?: InputMaybe<Scalars['String']>;
-  location?: InputMaybe<Scalars['String']>;
-  name: Scalars['String'];
-  userRegistrationRequired?: InputMaybe<Scalars['Boolean']>;
-  visibleInSearch?: InputMaybe<Scalars['Boolean']>;
+  apiUrl?: InputMaybe<Scalars['URL']['input']>;
+  attendees?: InputMaybe<Scalars['String']['input']>;
+  description: Scalars['String']['input'];
+  image?: InputMaybe<Scalars['String']['input']>;
+  location?: InputMaybe<Scalars['String']['input']>;
+  name: Scalars['String']['input'];
+  userRegistrationRequired?: InputMaybe<Scalars['Boolean']['input']>;
+  visibleInSearch?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 export type OrganizationOrderByInput =
@@ -1121,32 +1132,32 @@ export type OrganizationOrderByInput =
   | 'name_DESC';
 
 export type OrganizationWhereInput = {
-  apiUrl?: InputMaybe<Scalars['URL']>;
-  apiUrl_contains?: InputMaybe<Scalars['URL']>;
-  apiUrl_in?: InputMaybe<Array<Scalars['URL']>>;
-  apiUrl_not?: InputMaybe<Scalars['URL']>;
-  apiUrl_not_in?: InputMaybe<Array<Scalars['URL']>>;
-  apiUrl_starts_with?: InputMaybe<Scalars['URL']>;
-  description?: InputMaybe<Scalars['String']>;
-  description_contains?: InputMaybe<Scalars['String']>;
-  description_in?: InputMaybe<Array<Scalars['String']>>;
-  description_not?: InputMaybe<Scalars['String']>;
-  description_not_in?: InputMaybe<Array<Scalars['String']>>;
-  description_starts_with?: InputMaybe<Scalars['String']>;
-  id?: InputMaybe<Scalars['ID']>;
-  id_contains?: InputMaybe<Scalars['ID']>;
-  id_in?: InputMaybe<Array<Scalars['ID']>>;
-  id_not?: InputMaybe<Scalars['ID']>;
-  id_not_in?: InputMaybe<Array<Scalars['ID']>>;
-  id_starts_with?: InputMaybe<Scalars['ID']>;
-  name?: InputMaybe<Scalars['String']>;
-  name_contains?: InputMaybe<Scalars['String']>;
-  name_in?: InputMaybe<Array<Scalars['String']>>;
-  name_not?: InputMaybe<Scalars['String']>;
-  name_not_in?: InputMaybe<Array<Scalars['String']>>;
-  name_starts_with?: InputMaybe<Scalars['String']>;
-  userRegistrationRequired?: InputMaybe<Scalars['Boolean']>;
-  visibleInSearch?: InputMaybe<Scalars['Boolean']>;
+  apiUrl?: InputMaybe<Scalars['URL']['input']>;
+  apiUrl_contains?: InputMaybe<Scalars['URL']['input']>;
+  apiUrl_in?: InputMaybe<Array<Scalars['URL']['input']>>;
+  apiUrl_not?: InputMaybe<Scalars['URL']['input']>;
+  apiUrl_not_in?: InputMaybe<Array<Scalars['URL']['input']>>;
+  apiUrl_starts_with?: InputMaybe<Scalars['URL']['input']>;
+  description?: InputMaybe<Scalars['String']['input']>;
+  description_contains?: InputMaybe<Scalars['String']['input']>;
+  description_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  description_not?: InputMaybe<Scalars['String']['input']>;
+  description_not_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  description_starts_with?: InputMaybe<Scalars['String']['input']>;
+  id?: InputMaybe<Scalars['ID']['input']>;
+  id_contains?: InputMaybe<Scalars['ID']['input']>;
+  id_in?: InputMaybe<Array<Scalars['ID']['input']>>;
+  id_not?: InputMaybe<Scalars['ID']['input']>;
+  id_not_in?: InputMaybe<Array<Scalars['ID']['input']>>;
+  id_starts_with?: InputMaybe<Scalars['ID']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  name_contains?: InputMaybe<Scalars['String']['input']>;
+  name_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  name_not?: InputMaybe<Scalars['String']['input']>;
+  name_not_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  name_starts_with?: InputMaybe<Scalars['String']['input']>;
+  userRegistrationRequired?: InputMaybe<Scalars['Boolean']['input']>;
+  visibleInSearch?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 export type OtpData = {
@@ -1515,6 +1526,19 @@ export type Subscription = {
   onPluginUpdate?: Maybe<Plugin>;
 };
 
+export type Task = {
+  __typename?: 'Task';
+  _id: Scalars['ID']['output'];
+  completed?: Maybe<Scalars['Boolean']['output']>;
+  createdAt: Scalars['DateTime']['output'];
+  creator: User;
+  deadline?: Maybe<Scalars['DateTime']['output']>;
+  description?: Maybe<Scalars['String']['output']>;
+  event: Event;
+  title: Scalars['String']['output'];
+  volunteers?: Maybe<Array<Maybe<User>>>;
+};
+
 export type ToggleUserTagAssignInput = {
   tagId: Scalars['ID']['input'];
   userId: Scalars['ID']['input'];
@@ -1547,6 +1571,7 @@ export type UpdateEventInput = {
   description?: InputMaybe<Scalars['String']['input']>;
   endDate?: InputMaybe<Scalars['Date']['input']>;
   endTime?: InputMaybe<Scalars['Time']['input']>;
+  images?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   isPublic?: InputMaybe<Scalars['Boolean']['input']>;
   isRegisterable?: InputMaybe<Scalars['Boolean']['input']>;
   latitude?: InputMaybe<Scalars['Latitude']['input']>;
@@ -1560,18 +1585,11 @@ export type UpdateEventInput = {
 };
 
 export type UpdateOrganizationInput = {
-  description?: InputMaybe<Scalars['String']>;
-  location?: InputMaybe<Scalars['String']>;
-  name?: InputMaybe<Scalars['String']>;
-  userRegistrationRequired?: InputMaybe<Scalars['Boolean']>;
-  visibleInSearch?: InputMaybe<Scalars['Boolean']>;
-};
-
-export type UpdateTaskInput = {
-  completed?: InputMaybe<Scalars['Boolean']>;
-  deadline?: InputMaybe<Scalars['DateTime']>;
-  description?: InputMaybe<Scalars['String']>;
-  title?: InputMaybe<Scalars['String']>;
+  description?: InputMaybe<Scalars['String']['input']>;
+  location?: InputMaybe<Scalars['String']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  userRegistrationRequired?: InputMaybe<Scalars['Boolean']['input']>;
+  visibleInSearch?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 export type UpdateUserInput = {
@@ -1610,6 +1628,7 @@ export type User = {
   adminApproved?: Maybe<Scalars['Boolean']['output']>;
   adminFor?: Maybe<Array<Maybe<Organization>>>;
   appLanguageCode: Scalars['String']['output'];
+  assignedTasks?: Maybe<Array<Maybe<Task>>>;
   birthDate?: Maybe<Scalars['Date']['output']>;
   createdAt?: Maybe<Scalars['DateTime']['output']>;
   createdEvents?: Maybe<Array<Maybe<Event>>>;
@@ -1927,6 +1946,7 @@ export type ResolversTypes = {
   EventAttendeeInput: EventAttendeeInput;
   EventInput: EventInput;
   EventOrderByInput: EventOrderByInput;
+  EventProject: ResolverTypeWrapper<Omit<EventProject, 'event' | 'tasks'> & { event: ResolversTypes['Event'], tasks?: Maybe<Array<Maybe<ResolversTypes['Task']>>> }>;
   EventWhereInput: EventWhereInput;
   ExtendSession: ResolverTypeWrapper<ExtendSession>;
   Feedback: ResolverTypeWrapper<InterfaceFeedbackModel>;
@@ -1986,6 +2006,7 @@ export type ResolversTypes = {
   Status: Status;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
   Subscription: ResolverTypeWrapper<{}>;
+  Task: ResolverTypeWrapper<Omit<Task, 'creator' | 'event' | 'volunteers'> & { creator: ResolversTypes['User'], event: ResolversTypes['Event'], volunteers?: Maybe<Array<Maybe<ResolversTypes['User']>>> }>;
   Time: ResolverTypeWrapper<Scalars['Time']['output']>;
   ToggleUserTagAssignInput: ToggleUserTagAssignInput;
   Translation: ResolverTypeWrapper<Translation>;
@@ -2055,6 +2076,7 @@ export type ResolversParentTypes = {
   Event: InterfaceEventModel;
   EventAttendeeInput: EventAttendeeInput;
   EventInput: EventInput;
+  EventProject: Omit<EventProject, 'event' | 'tasks'> & { event: ResolversParentTypes['Event'], tasks?: Maybe<Array<Maybe<ResolversParentTypes['Task']>>> };
   EventWhereInput: EventWhereInput;
   ExtendSession: ExtendSession;
   Feedback: InterfaceFeedbackModel;
@@ -2107,6 +2129,7 @@ export type ResolversParentTypes = {
   RecaptchaVerification: RecaptchaVerification;
   String: Scalars['String']['output'];
   Subscription: {};
+  Task: Omit<Task, 'creator' | 'event' | 'volunteers'> & { creator: ResolversParentTypes['User'], event: ResolversParentTypes['Event'], volunteers?: Maybe<Array<Maybe<ResolversParentTypes['User']>>> };
   Time: Scalars['Time']['output'];
   ToggleUserTagAssignInput: ToggleUserTagAssignInput;
   Translation: Translation;
@@ -2304,17 +2327,28 @@ export type EventResolvers<ContextType = any, ParentType extends ResolversParent
   endDate?: Resolver<ResolversTypes['Date'], ParentType, ContextType>;
   endTime?: Resolver<Maybe<ResolversTypes['Time']>, ParentType, ContextType>;
   feedback?: Resolver<Array<ResolversTypes['Feedback']>, ParentType, ContextType>;
+  images?: Resolver<Maybe<Array<Maybe<ResolversTypes['String']>>>, ParentType, ContextType>;
   isPublic?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   isRegisterable?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   latitude?: Resolver<Maybe<ResolversTypes['Latitude']>, ParentType, ContextType>;
   location?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   longitude?: Resolver<Maybe<ResolversTypes['Longitude']>, ParentType, ContextType>;
   organization?: Resolver<Maybe<ResolversTypes['Organization']>, ParentType, ContextType>;
+  projects?: Resolver<Maybe<Array<Maybe<ResolversTypes['EventProject']>>>, ParentType, ContextType>;
   recurrance?: Resolver<Maybe<ResolversTypes['Recurrance']>, ParentType, ContextType>;
   recurring?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   startDate?: Resolver<ResolversTypes['Date'], ParentType, ContextType>;
   startTime?: Resolver<Maybe<ResolversTypes['Time']>, ParentType, ContextType>;
   status?: Resolver<ResolversTypes['Status'], ParentType, ContextType>;
+  title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type EventProjectResolvers<ContextType = any, ParentType extends ResolversParentTypes['EventProject'] = ResolversParentTypes['EventProject']> = {
+  _id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  description?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  event?: Resolver<ResolversTypes['Event'], ParentType, ContextType>;
+  tasks?: Resolver<Maybe<Array<Maybe<ResolversTypes['Task']>>>, ParentType, ContextType>;
   title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
@@ -2553,12 +2587,12 @@ export type OrganizationResolvers<ContextType = any, ParentType extends Resolver
   customFields?: Resolver<Array<ResolversTypes['OrganizationCustomField']>, ParentType, ContextType>;
   description?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   image?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  isPublic?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   location?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   members?: Resolver<Maybe<Array<Maybe<ResolversTypes['User']>>>, ParentType, ContextType>;
   membershipRequests?: Resolver<Maybe<Array<Maybe<ResolversTypes['MembershipRequest']>>>, ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   pinnedPosts?: Resolver<Maybe<Array<Maybe<ResolversTypes['Post']>>>, ParentType, ContextType>;
-  userRegistrationRequired?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   userTags?: Resolver<Maybe<ResolversTypes['UserTagsConnection']>, ParentType, ContextType, Partial<OrganizationUserTagsArgs>>;
   visibleInSearch?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
@@ -2578,8 +2612,8 @@ export type OrganizationInfoNodeResolvers<ContextType = any, ParentType extends 
   creator?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
   description?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   image?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  isPublic?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  userRegistrationRequired?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   visibleInSearch?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
@@ -2691,6 +2725,19 @@ export type SubscriptionResolvers<ContextType = any, ParentType extends Resolver
   onPluginUpdate?: SubscriptionResolver<Maybe<ResolversTypes['Plugin']>, "onPluginUpdate", ParentType, ContextType>;
 };
 
+export type TaskResolvers<ContextType = any, ParentType extends ResolversParentTypes['Task'] = ResolversParentTypes['Task']> = {
+  _id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  completed?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+  createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
+  creator?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
+  deadline?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>;
+  description?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  event?: Resolver<ResolversTypes['Event'], ParentType, ContextType>;
+  title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  volunteers?: Resolver<Maybe<Array<Maybe<ResolversTypes['User']>>>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export interface TimeScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['Time'], any> {
   name: 'Time';
 }
@@ -2727,6 +2774,7 @@ export type UserResolvers<ContextType = any, ParentType extends ResolversParentT
   adminApproved?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   adminFor?: Resolver<Maybe<Array<Maybe<ResolversTypes['Organization']>>>, ParentType, ContextType>;
   appLanguageCode?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  assignedTasks?: Resolver<Maybe<Array<Maybe<ResolversTypes['Task']>>>, ParentType, ContextType>;
   birthDate?: Resolver<Maybe<ResolversTypes['Date']>, ParentType, ContextType>;
   createdAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>;
   createdEvents?: Resolver<Maybe<Array<Maybe<ResolversTypes['Event']>>>, ParentType, ContextType>;
@@ -2843,6 +2891,7 @@ export type Resolvers<ContextType = any> = {
   EmailAddress?: GraphQLScalarType;
   Error?: ErrorResolvers<ContextType>;
   Event?: EventResolvers<ContextType>;
+  EventProject?: EventProjectResolvers<ContextType>;
   ExtendSession?: ExtendSessionResolvers<ContextType>;
   Feedback?: FeedbackResolvers<ContextType>;
   FieldError?: FieldErrorResolvers<ContextType>;
@@ -2876,6 +2925,7 @@ export type Resolvers<ContextType = any> = {
   PostConnection?: PostConnectionResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
   Subscription?: SubscriptionResolvers<ContextType>;
+  Task?: TaskResolvers<ContextType>;
   Time?: GraphQLScalarType;
   Translation?: TranslationResolvers<ContextType>;
   URL?: GraphQLScalarType;

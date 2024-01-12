@@ -69,6 +69,7 @@ export const inputs = gql`
     recurrance: Recurrance
     isPublic: Boolean!
     isRegisterable: Boolean!
+    images: [String]
     location: String
     latitude: Latitude
     longitude: Longitude
@@ -249,6 +250,7 @@ export const inputs = gql`
     location: String
     latitude: Latitude
     longitude: Longitude
+    images: [String]
     allDay: Boolean
     startTime: Time
     endTime: Time
