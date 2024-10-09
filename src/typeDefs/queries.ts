@@ -11,12 +11,15 @@ export const queries = gql`
 
     actionItemsByOrganization(
       organizationId: ID!
+      eventId: ID
       where: ActionItemWhereInput
       orderBy: ActionItemsOrderByInput
     ): [ActionItem]
 
     actionItemCategoriesByOrganization(
       organizationId: ID!
+      where: ActionItemCategoryWhereInput
+      orderBy: ActionItemsOrderByInput
     ): [ActionItemCategory]
 
     agendaItemByEvent(relatedEventId: ID!): [AgendaItem]
@@ -131,6 +134,8 @@ export const queries = gql`
 
     getAllNotesForAgendaItem(agendaItemId: ID!): [Note]
 
+    getRecurringEvents(baseRecurringEventId: ID!): [Event]
+
     advertisementsConnection(
       after: String
       before: String
@@ -197,5 +202,7 @@ export const queries = gql`
     ): [UserData]! @auth
 
     venue(id: ID!): Venue
+
+    eventsAttendedByUser(id: ID, orderBy: EventOrderByInput): [Event]
   }
 `;
