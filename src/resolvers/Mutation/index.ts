@@ -69,9 +69,7 @@ import { removeDirectChat } from "./removeDirectChat";
 import { removeEvent } from "./removeEvent";
 import { removeEventAttendee } from "./removeEventAttendee";
 import { removeEventVolunteer } from "./removeEventVolunteer";
-import { removeFund } from "./removeFund";
 import { removeEventVolunteerGroup } from "./removeEventVolunteerGroup";
-import { removeFundraisingCampaign } from "./removeFundraisingCampaign";
 import { removeFundraisingCampaignPledge } from "./removeFundraisingCampaingPledge";
 import { removeGroupChat } from "./removeGroupChat";
 import { removeMember } from "./removeMember";
@@ -116,6 +114,7 @@ import { updateLanguage } from "./updateLanguage";
 import { updateOrganization } from "./updateOrganization";
 import { updatePluginStatus } from "./updatePluginStatus";
 import { updatePost } from "./updatePost";
+import { updateSessionTimeout } from "./updateSessionTimeout";
 import { updateUserPassword } from "./updateUserPassword";
 import { updateUserProfile } from "./updateUserProfile";
 import { updateUserRoleInOrganization } from "./updateUserRoleInOrganization";
@@ -199,7 +198,6 @@ export const Mutation: MutationResolvers = {
   removeEvent,
   removeEventAttendee,
   removeEventVolunteer,
-  removeFund,
   removeEventVolunteerGroup,
   removeGroupChat,
   removeMember,
@@ -239,6 +237,7 @@ export const Mutation: MutationResolvers = {
   updateLanguage,
   updateOrganization,
   updatePluginStatus,
+  updateSessionTimeout,
   updateUserProfile,
   updateUserPassword,
   updateUserTag,
@@ -247,6 +246,5 @@ export const Mutation: MutationResolvers = {
   updateFundraisingCampaign,
   updateFundraisingCampaignPledge,
   createFundraisingCampaignPledge,
-  removeFundraisingCampaign,
   removeFundraisingCampaignPledge,
 };

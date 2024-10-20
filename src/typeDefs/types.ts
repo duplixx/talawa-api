@@ -75,6 +75,7 @@ export const types = gql`
     actionItemCategory: ActionItemCategory
     preCompletionNotes: String
     postCompletionNotes: String
+    allotedHours: Float
     assignmentDate: Date!
     dueDate: Date!
     completionDate: Date!
@@ -129,6 +130,7 @@ export const types = gql`
     logoUrl: String
     websiteLink: String
     socialMediaUrls: SocialMediaUrls
+    timeout: Int
   }
   type CreateAdminPayload {
     user: AppUserProfile
@@ -623,6 +625,7 @@ export const types = gql`
 
   type User {
     _id: ID!
+    identifier: Int!
     appUserProfileId: AppUserProfile
     address: Address
     birthDate: Date
@@ -647,6 +650,7 @@ export const types = gql`
     phone: UserPhone
     membershipRequests: [MembershipRequest]
     registeredEvents: [Event]
+    eventsAttended: [Event]
     pluginCreationAllowed: Boolean!
     tagsAssignedWith(
       after: String
