@@ -5,6 +5,7 @@ directive @role(requires: UserType) on FIELD_DEFINITION
 type ActionItem {
   _id: ID!
   actionItemCategory: ActionItemCategory
+  allotedHours: Float
   assignee: User
   assigner: User
   assignmentDate: Date!
@@ -29,16 +30,24 @@ type ActionItemCategory {
   updatedAt: Date!
 }
 
+input ActionItemCategoryWhereInput {
+  is_disabled: Boolean
+  name_contains: String
+}
+
 input ActionItemWhereInput {
   actionItemCategory_id: ID
+  assigneeName: String
+  categoryName: String
   event_id: ID
-  is_active: Boolean
   is_completed: Boolean
 }
 
 enum ActionItemsOrderByInput {
   createdAt_ASC
   createdAt_DESC
+  dueDate_ASC
+  dueDate_DESC
 }
 
 type Address {
@@ -181,6 +190,32 @@ input CampaignWhereInput {
   organizationId: ID
 }
 
+type Chat {
+  _id: ID!
+  admins: [User]
+  createdAt: DateTime!
+  creator: User
+  image: String
+  isGroup: Boolean!
+  lastMessageId: String
+  messages: [ChatMessage]
+  name: String
+  organization: Organization
+  updatedAt: DateTime!
+  users: [User!]!
+}
+
+type ChatMessage {
+  _id: ID!
+  chatMessageBelongsTo: Chat!
+  createdAt: DateTime!
+  deletedBy: [User]
+  messageContent: String!
+  replyTo: ChatMessage
+  sender: User!
+  updatedAt: DateTime!
+}
+
 type CheckIn {
   _id: ID!
   createdAt: DateTime!
@@ -230,6 +265,7 @@ type Community {
   logoUrl: String
   name: String!
   socialMediaUrls: SocialMediaUrls
+  timeout: Int
   websiteLink: String
 }
 
@@ -269,6 +305,7 @@ interface ConnectionPageInfo {
 scalar CountryCode
 
 input CreateActionItemInput {
+  allotedHours: Float
   assigneeId: ID!
   dueDate: Date
   eventId: ID
@@ -537,26 +574,6 @@ type DeleteAdvertisementPayload {
 
 type DeletePayload {
   success: Boolean!
-}
-
-type DirectChat {
-  _id: ID!
-  createdAt: DateTime!
-  creator: User
-  messages: [DirectChatMessage]
-  organization: Organization
-  updatedAt: DateTime!
-  users: [User!]!
-}
-
-type DirectChatMessage {
-  _id: ID!
-  createdAt: DateTime!
-  directChatMessageBelongsTo: DirectChat!
-  messageContent: String!
-  receiver: User!
-  sender: User!
-  updatedAt: DateTime!
 }
 
 type Donation {
@@ -922,26 +939,6 @@ type Group {
   updatedAt: DateTime!
 }
 
-type GroupChat {
-  _id: ID!
-  createdAt: DateTime!
-  creator: User
-  messages: [GroupChatMessage]
-  organization: Organization!
-  title: String!
-  updatedAt: DateTime!
-  users: [User!]!
-}
-
-type GroupChatMessage {
-  _id: ID!
-  createdAt: DateTime!
-  groupChatMessageBelongsTo: GroupChat!
-  messageContent: String!
-  sender: User!
-  updatedAt: DateTime!
-}
-
 type InvalidCursor implements FieldError {
   message: String!
   path: [String!]!
@@ -1015,6 +1012,10 @@ type MembershipRequest {
 }
 
 input MembershipRequestsWhereInput {
+  creatorId: ID
+  creatorId_in: [ID!]
+  creatorId_not: ID
+  creatorId_not_in: [ID!]
   id: ID
   id_contains: ID
   id_in: [ID!]
@@ -1032,16 +1033,6 @@ type Message {
   text: String!
   updatedAt: DateTime!
   videoUrl: URL
-}
-
-type MessageChat {
-  _id: ID!
-  createdAt: DateTime!
-  languageBarrier: Boolean
-  message: String!
-  receiver: User!
-  sender: User!
-  updatedAt: DateTime!
 }
 
 input MessageChatInput {
@@ -1070,9 +1061,7 @@ type Mutation {
   addPledgeToFundraisingCampaign(campaignId: ID!, pledgeId: ID!): FundraisingCampaignPledge!
   addUserCustomData(dataName: String!, dataValue: Any!, organizationId: ID!): UserCustomData!
   addUserImage(file: String!): User!
-  addUserToGroupChat(chatId: ID!, userId: ID!): GroupChat!
   addUserToUserFamily(familyId: ID!, userId: ID!): UserFamily!
-  adminRemoveGroup(groupId: ID!): GroupChat!
   assignUserTag(input: ToggleUserTagAssignInput!): User
   blockPluginCreationBySuperadmin(blockUser: Boolean!, userId: ID!): AppUserProfile!
   blockUser(organizationId: ID!, userId: ID!): User!
@@ -1080,14 +1069,14 @@ type Mutation {
   checkIn(data: CheckInCheckOutInput!): CheckIn!
   checkOut(data: CheckInCheckOutInput!): CheckOut!
   createActionItem(actionItemCategoryId: ID!, data: CreateActionItemInput!): ActionItem!
-  createActionItemCategory(name: String!, organizationId: ID!): ActionItemCategory!
+  createActionItemCategory(isDisabled: Boolean!, name: String!, organizationId: ID!): ActionItemCategory!
   createAdmin(data: UserAndOrganizationInput!): CreateAdminPayload!
   createAdvertisement(input: CreateAdvertisementInput!): CreateAdvertisementPayload
   createAgendaCategory(input: CreateAgendaCategoryInput!): AgendaCategory!
   createAgendaItem(input: CreateAgendaItemInput!): AgendaItem!
   createAgendaSection(input: CreateAgendaSectionInput!): AgendaSection!
+  createChat(data: chatInput!): Chat
   createComment(data: CommentInput!, postId: ID!): Comment
-  createDirectChat(data: createChatInput!): DirectChat!
   createDonation(amount: Float!, nameOfOrg: String!, nameOfUser: String!, orgId: ID!, payPalId: ID!, userId: ID!): Donation!
   createEvent(data: EventInput!, recurrenceRuleData: RecurrenceRuleInput): Event!
   createEventVolunteer(data: EventVolunteerInput!): EventVolunteer!
@@ -1095,9 +1084,7 @@ type Mutation {
   createFund(data: FundInput!): Fund!
   createFundraisingCampaign(data: FundCampaignInput!): FundraisingCampaign!
   createFundraisingCampaignPledge(data: FundCampaignPledgeInput!): FundraisingCampaignPledge!
-  createGroupChat(data: createGroupChatInput!): GroupChat!
   createMember(input: UserAndOrganizationInput!): CreateMemberPayload!
-  createMessageChat(data: MessageChatInput!): MessageChat!
   createNote(data: NoteInput!): Note!
   createOrganization(data: OrganizationInput, file: String): Organization!
   createPlugin(pluginCreatedBy: String!, pluginDesc: String!, pluginName: String!, uninstalledOrgs: [ID!]): Plugin!
@@ -1132,15 +1119,11 @@ type Mutation {
   removeAgendaItem(id: ID!): AgendaItem!
   removeAgendaSection(id: ID!): ID!
   removeComment(id: ID!): Comment
-  removeDirectChat(chatId: ID!, organizationId: ID!): DirectChat!
   removeEvent(id: ID!, recurringEventDeleteType: RecurringEventMutationType): Event!
   removeEventAttendee(data: EventAttendeeInput!): User!
   removeEventVolunteer(id: ID!): EventVolunteer!
   removeEventVolunteerGroup(id: ID!): EventVolunteerGroup!
-  removeFund(id: ID!): Fund!
-  removeFundraisingCampaign(id: ID!): FundraisingCampaign!
   removeFundraisingCampaignPledge(id: ID!): FundraisingCampaignPledge!
-  removeGroupChat(chatId: ID!): GroupChat!
   removeMember(data: UserAndOrganizationInput!): Organization!
   removeOrganization(id: ID!): UserData!
   removeOrganizationCustomField(customFieldId: ID!, organizationId: ID!): OrganizationCustomField!
@@ -1149,7 +1132,6 @@ type Mutation {
   removeSampleOrganization: Boolean!
   removeUserCustomData(organizationId: ID!): UserCustomData!
   removeUserFamily(familyId: ID!): UserFamily!
-  removeUserFromGroupChat(chatId: ID!, userId: ID!): GroupChat!
   removeUserFromUserFamily(familyId: ID!, userId: ID!): UserFamily!
   removeUserImage: User!
   removeUserTag(id: ID!): UserTag
@@ -1157,8 +1139,7 @@ type Mutation {
   revokeRefreshTokenForUser: Boolean!
   saveFcmToken(token: String): Boolean!
   sendMembershipRequest(organizationId: ID!): MembershipRequest!
-  sendMessageToDirectChat(chatId: ID!, messageContent: String!): DirectChatMessage!
-  sendMessageToGroupChat(chatId: ID!, messageContent: String!): GroupChatMessage!
+  sendMessageToChat(chatId: ID!, messageContent: String!, replyTo: ID): ChatMessage!
   signUp(data: UserInput!, file: String): AuthData!
   togglePostPin(id: ID!, title: String): Post!
   unassignUserTag(input: ToggleUserTagAssignInput!): User
@@ -1184,6 +1165,7 @@ type Mutation {
   updateOrganization(data: UpdateOrganizationInput, file: String, id: ID!): Organization!
   updatePluginStatus(id: ID!, orgId: ID!): Plugin!
   updatePost(data: PostUpdateInput, id: ID!): Post!
+  updateSessionTimeout(timeout: Int!): Boolean!
   updateUserPassword(data: UpdateUserPasswordInput!): UserData!
   updateUserProfile(data: UpdateUserInput, file: String): User!
   updateUserRoleInOrganization(organizationId: ID!, role: String!, userId: ID!): Organization!
@@ -1476,23 +1458,23 @@ type PostsConnection {
 }
 
 type Query {
-  actionItemCategoriesByOrganization(organizationId: ID!): [ActionItemCategory]
+  actionItemCategoriesByOrganization(orderBy: ActionItemsOrderByInput, organizationId: ID!, where: ActionItemCategoryWhereInput): [ActionItemCategory]
   actionItemsByEvent(eventId: ID!): [ActionItem]
-  actionItemsByOrganization(orderBy: ActionItemsOrderByInput, organizationId: ID!, where: ActionItemWhereInput): [ActionItem]
+  actionItemsByOrganization(eventId: ID, orderBy: ActionItemsOrderByInput, organizationId: ID!, where: ActionItemWhereInput): [ActionItem]
   adminPlugin(orgId: ID!): [Plugin]
   advertisementsConnection(after: String, before: String, first: PositiveInt, last: PositiveInt): AdvertisementsConnection
   agendaCategory(id: ID!): AgendaCategory!
   agendaItemByEvent(relatedEventId: ID!): [AgendaItem]
   agendaItemByOrganization(organizationId: ID!): [AgendaItem]
   agendaItemCategoriesByOrganization(organizationId: ID!): [AgendaCategory]
+  chatById(id: ID!): Chat!
+  chatsByUserId(id: ID!): [Chat]
   checkAuth: User!
   customDataByOrganization(organizationId: ID!): [UserCustomData!]!
   customFieldsByOrganization(id: ID!): [OrganizationCustomField]
-  directChatById(id: ID!): DirectChat
-  directChatsByUserID(id: ID!): [DirectChat]
-  directChatsMessagesByChatID(id: ID!): [DirectChatMessage]
   event(id: ID!): Event
   eventVolunteersByEvent(id: ID!): [EventVolunteer]
+  eventsAttendedByUser(id: ID, orderBy: EventOrderByInput): [Event]
   eventsByOrganization(id: ID, orderBy: EventOrderByInput): [Event]
   eventsByOrganizationConnection(first: Int, orderBy: EventOrderByInput, skip: Int, where: EventWhereInput): [Event!]!
   fundsByOrganization(orderBy: FundOrderByInput, organizationId: ID!, where: FundWhereInput): [Fund]
@@ -1514,12 +1496,11 @@ type Query {
   getNoteById(id: ID!): Note!
   getPledgesByUserId(orderBy: PledgeOrderByInput, userId: ID!, where: PledgeWhereInput): [FundraisingCampaignPledge]
   getPlugins: [Plugin]
+  getRecurringEvents(baseRecurringEventId: ID!): [Event]
   getUserTag(id: ID!): UserTag
   getUserTagAncestors(id: ID!): [UserTag]
   getVenueByOrgId(first: Int, orderBy: VenueOrderByInput, orgId: ID!, skip: Int, where: VenueWhereInput): [Venue]
   getlanguage(lang_code: String!): [Translation]
-  groupChatById(id: ID!): GroupChat
-  groupChatsByUserId(id: ID!): [GroupChat]
   hasSubmittedFeedback(eventId: ID!, userId: ID!): Boolean
   isSampleOrganization(id: ID!): Boolean!
   joinedOrganizations(id: ID): [Organization]
@@ -1620,9 +1601,7 @@ enum Status {
 }
 
 type Subscription {
-  directMessageChat: MessageChat
-  messageSentToDirectChat(userId: ID!): DirectChatMessage
-  messageSentToGroupChat(userId: ID!): GroupChatMessage
+  messageSentToChat(userId: ID!): ChatMessage
   onPluginUpdate: Plugin
 }
 
@@ -1661,6 +1640,7 @@ input UpdateActionItemCategoryInput {
 }
 
 input UpdateActionItemInput {
+  allotedHours: Float
   assigneeId: ID
   completionDate: Date
   dueDate: Date
@@ -1818,8 +1798,10 @@ type User {
   email: EmailAddress!
   employmentStatus: EmploymentStatus
   eventAdmin: [Event]
+  eventsAttended: [Event]
   firstName: String!
   gender: Gender
+  identifier: Int!
   image: String
   joinedOrganizations: [Organization]
   lastName: String!
@@ -2037,14 +2019,12 @@ enum WeekDays {
   WEDNESDAY
 }
 
-input createChatInput {
+input chatInput {
+  image: String
+  isGroup: Boolean!
+  name: String
   organizationId: ID
   userIds: [ID!]!
-}
-
-type createDirectChatPayload {
-  directChat: DirectChat
-  userErrors: [CreateDirectChatError!]!
 }
 
 input createGroupChatInput {

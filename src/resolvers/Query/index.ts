@@ -13,11 +13,8 @@ import { getAgendaSection } from "./getAgendaSection";
 import { checkAuth } from "./checkAuth";
 import { customDataByOrganization } from "./customDataByOrganization";
 import { customFieldsByOrganization } from "./customFieldsByOrganization";
-import { directChatsByUserID } from "./directChatsByUserID";
-import { directChatsMessagesByChatID } from "./directChatsMessagesByChatID";
-import { directChatById } from "./directChatById";
-import { groupChatById } from "./groupChatById";
-import { groupChatsByUserId } from "./groupChatsByUserId";
+import { chatById } from "./chatById";
+import { chatsByUserId } from "./chatsByUserId";
 import { event } from "./event";
 import { eventsByOrganization } from "./eventsByOrganization";
 import { eventsByOrganizationConnection } from "./eventsByOrganizationConnection";
@@ -53,6 +50,9 @@ import { getEventAttendeesByEventId } from "./getEventAttendeesByEventId";
 import { getVenueByOrgId } from "./getVenueByOrgId";
 import { getAllNotesForAgendaItem } from "./getAllNotesForAgendaItem";
 import { getNoteById } from "./getNoteById";
+import { eventsAttendedByUser } from "./eventsAttendedByUser";
+import { getRecurringEvents } from "./getRecurringEvents";
+
 export const Query: QueryResolvers = {
   actionItemsByEvent,
   agendaCategory,
@@ -68,11 +68,8 @@ export const Query: QueryResolvers = {
   getCommunityData,
   customFieldsByOrganization,
   customDataByOrganization,
-  directChatsByUserID,
-  directChatsMessagesByChatID,
-  directChatById,
-  groupChatById,
-  groupChatsByUserId,
+  chatById,
+  chatsByUserId,
   event,
   eventsByOrganization,
   eventsByOrganizationConnection,
@@ -86,6 +83,7 @@ export const Query: QueryResolvers = {
   getNoteById,
   getlanguage,
   getPlugins,
+  getRecurringEvents,
   getUserTag,
   getUserTagAncestors,
   isSampleOrganization,
@@ -108,4 +106,5 @@ export const Query: QueryResolvers = {
   getEventAttendee,
   getEventAttendeesByEventId,
   getVenueByOrgId,
+  eventsAttendedByUser,
 };
